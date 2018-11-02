@@ -83,7 +83,7 @@ func Deploy(spec *DeployFunctionSpec, update bool, warnInsecureGateway bool) (in
 	gateway := strings.TrimRight(spec.Gateway, "/")
 
 	if spec.Replace {
-		DeleteFunction(gateway, spec.FunctionName)
+		DeleteFunction(gateway, spec.FunctionName, false)
 	}
 
 	req := requests.CreateFunctionRequest{

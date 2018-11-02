@@ -20,7 +20,6 @@ var (
 	username      string
 	password      string
 	passwordStdin bool
-	tlsInsecure   bool
 )
 
 func init() {
