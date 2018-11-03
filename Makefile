@@ -1,3 +1,10 @@
+.GIT_COMMIT=$(shell git rev-parse HEAD)
+.GIT_VERSION=$(shell git describe --tags 2>/dev/null || echo "$(.GIT_COMMIT)")
+.GIT_UNTRACKEDCHANGES := $(shell git status --porcelain --untracked-files=no)
+ifneq ($(.GIT_UNTRACKEDCHANGES),)
+	GITCOMMIT := $(GITCOMMIT)-dirty
+endif
+
 GO_FILES?=$$(find . -name '*.go' |grep -v vendor)
 TAG?=latest
 
@@ -37,4 +44,17 @@ FUNCTION_UP_TIMEOUT?=30
 .EXPORT_ALL_VARIABLES:
 test-templating:
 	./build_integration_test.sh
+
+
+install: | $(GOPATH)/bin/faas-cli
+
+$(GOPATH)/bin/faas-cli: $(shell find . -type f -name '*.go') ## install the cli to your local system
+	@echo "Installing faas-cli"
+	go install --ldflags "-s -w \
+        -X github.com/openfaas/faas-cli/version.GitCommit=$(.GIT_COMMIT) \
+        -X github.com/openfaas/faas-cli/version.Version=$(.GIT_VERSION)" \
+        -a -installsuffix cgo
+
+	@echo "Installed:"
+	@faas-cli version
 
