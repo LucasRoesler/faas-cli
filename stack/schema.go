@@ -58,6 +58,14 @@ type Function struct {
 	Annotations *map[string]string `yaml:"annotations"`
 }
 
+type Configuration struct {
+	StackConfig StackConfiguration `yaml:"configuration"`
+}
+
+type StackConfiguration struct {
+	TemlpatesConfigs map[string]string `yaml:"templates"`
+}
+
 // FunctionResources Memory and CPU
 type FunctionResources struct {
 	Memory string `yaml:"memory"`
